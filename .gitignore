@@ -26,11 +26,19 @@ wheels/
 MANIFEST
 
 
-#LaTeX extras
-.aux
-.log
-.out
-.gz
+# Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
