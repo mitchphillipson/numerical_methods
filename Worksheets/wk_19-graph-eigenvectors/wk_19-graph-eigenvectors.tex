@@ -1,0 +1,142 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Tuesday, March 29}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 19\ \\[2ex] Graph Eigenvectors}}\\
+\end{center}
+\vspace{2mm}
+
+
+
+
+
+
+
+
+In Problems \ref{lap:start} -- \ref{lap:end} we're going to explore the Laplacian matrix $L$.
+This is defined as $L = D-A$ where $D$ is the diagonal matrix with entries given by the degree
+of each vertex and $A$ is the adjacency matrix.
+
+
+
+\begin{problem}
+\label{lap:start}
+ This is not a computer question. Verify that $\vec{1}$ is an eigenvector of the Lapacian matrix
+with eigenvalue $0$. This is a proof you'll type in \LaTeX.
+\end{problem}
+
+\begin{problem}
+ Here is another proof. Suppose $G$ has $k$ connected components. Prove the eigenvalue $0$ has
+multiplicity $k$ in the Lapacian.
+\end{problem}
+
+\begin{problem}
+The Lagrangian is a positive semidefinite matrix. This means all the eigenvalues should be greater
+than or equal to zero. Verify this (you don't need to prove it, just computationally).
+\end{problem}
+
+
+\begin{problem}
+Drawing graphs is extremely challenging. As long as the vertices and edges are correct, you can draw
+the graph however you like. Luckily, the eigenvectors of the Laplacian can help. Take the eigenvectors
+of the two smallest non-zero eigenvalues and use the coordinates as the $(x,y)$ values of the 
+vertices. This embedding is ``minimal'' in some sense. Write a program to draw graphs in this manner. 
+\end{problem}
+
+\begin{problem}
+\label{lap:end}
+
+The file \texttt{all\_graphs.dat} contains a database of all graphs with no isolated vertices 
+with less than or equal to $6$ vertices. The file \texttt{all\_graphs.pdf} is a drawing of each
+graph.
+
+Use the program from the previous problem to redraw all the graphs. You should automate the creation
+of the \LaTeX\ file. (I did). \texttt{matplotlib.pyplot} will be useful here. Essentially you'll be placing points and lines.
+\end{problem}
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

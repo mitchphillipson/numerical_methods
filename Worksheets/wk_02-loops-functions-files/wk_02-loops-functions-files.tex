@@ -1,0 +1,435 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, January 20}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 2\ \\[2ex] Loops, Functions, Reading Files}}\\
+\end{center}
+\vspace{2mm}
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP & 2.2.4, 2.2.5, 2.3, 2.5 \\
+ NMEP &  1.2, 1.3, 1.4
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+
+
+
+
+
+
+
+\section{Conditionals}
+This is just ``if'' statements. Here are some examples. Try to figure out what will print before you
+run the code.
+
+\begin{verbatim}
+if 3<4:
+    print("Yes")
+else:
+    print("No")
+\end{verbatim}
+Python uses white space to designate environments. The standard is 4 spaces. Typically, you just press
+tab and the computer figures it out.
+
+\begin{verbatim}
+if 3==4:
+    print("Yes")
+elif 3!=3:
+    print("No")
+else:
+    print("huh")
+\end{verbatim}
+Here is non-equality. != is $\neq$.
+
+Checking containment in a list.
+\begin{verbatim}
+L = [1,2,3]
+if 1 in L:
+    print("Hooray")
+
+if 5 in L:
+    print("Double Hooray")
+elif 4 in L:
+    print("Fore")
+else:
+    print("Dang")
+\end{verbatim}
+
+\section{Loops}
+
+\subsection{while}
+These are formatted as follows:
+\begin{verbatim}
+while condition:
+    do stuff
+\end{verbatim}
+
+Here is a basic example of building a list,
+\begin{verbatim}
+L = []
+i = 0
+while i<10:
+    L.append(i**2)
+    i+=1
+\end{verbatim}
+What did this do?
+
+You have to be careful not to accidentally enter an infinite loop. If you do, click the interpreter
+windows and press Ctrl+C. This should kill the execution.
+\begin{verbatim}
+while True:
+    pass
+\end{verbatim}
+
+
+\subsection{for}
+A for loop runs through an iterator.
+\begin{verbatim}
+for variable in iterator:
+    do stuff
+\end{verbatim}
+What is an iterator? The easiest version is a list. You can also create custom iterators, which 
+we may do. 
+
+Here is the same example as above.
+\begin{verbatim}
+L = []
+for i in range(10):
+    L.append(i**2)
+\end{verbatim}
+The range function returns a \emph{generator}, which is a special iterable. Try this,
+\begin{verbatim}
+print(range(10))
+\end{verbatim}
+Figure that out.
+
+There is less danger of falling into an infinite loop here. 
+
+\begin{verbatim}
+L = [1,4,-1,2]
+for i in L:
+    print(i)
+\end{verbatim}
+Showing you can iterate over a list.
+
+
+You can also \emph{unpack} while iterating,
+\begin{verbatim}
+L = [(1,2),(3,4),(5,6)]
+for i,j in L:
+    print(i*j)
+\end{verbatim}
+
+
+\subsection{list comprehension}
+If all we wanted to do was generate the list of squares, there is an easier way,
+\begin{verbatim}
+L = [i**2 for i in range(10)]
+\end{verbatim}
+This is a short-hand and it's really useful. You can put if-statements in it too,
+\begin{verbatim}
+L = [i**2 for i in range(10) if i!=5]
+\end{verbatim}
+Figure out what that did.
+
+
+\subsection{What should I use when?}
+It really depends, but my typical order is:
+\begin{enumerate}
+ \item List comprehension
+ \item For loop
+ \item While loop - Mainly if I want a value to end up within some tolerance
+\end{enumerate}
+
+However, as we'll see soon, loops are \emph{slow} so they are best avoid altogether (if possible).
+
+\section{Functions}
+The general way to define a function is,
+\begin{verbatim}
+def function_name(inputs):
+    do stuff
+    return thing
+\end{verbatim}
+
+For example, here is $f(x) = x^2$,
+\begin{verbatim}
+def f(x):
+    return x**2
+\end{verbatim}
+You use this by typing,
+\begin{verbatim}
+f(3)
+\end{verbatim}
+That should give you 9. Well, it'll probably give you nothing since we didn't print.
+
+It's good practice to have a comment on the second line of the function. 
+\begin{verbatim}
+def function_name(inputs):
+    #Describe function, inputs and outputs
+    do stuff
+    return thing
+\end{verbatim}
+This is how Python does the ``help'' stuff. 
+
+You can have a ``return'' statement anywhere in a function, but by convention you should only have
+one and it should be at the end.
+
+
+\subsection{Optional Arguments} 
+In the range function defined above, the \texttt{step} variable defaults to 1. This is an optional
+argument. Here is another example,
+\begin{verbatim}
+def f(x=1,y=3):
+    return x**2 + 2*y
+\end{verbatim}
+This is very simple, but let see what we can do with it.
+\begin{verbatim}
+f() #1**2+2*3 -> 7
+f(2) #2**2+2*3 -> 10
+f(2,1) #2**2+2*1 ->6
+f(y=2) #1**2+2*2 -> 5
+f(y=2,x=3) #3**2+2*2 -> 12
+\end{verbatim}
+You can change the optional variables using \emph{keywords}. If you don't use the keywords, the
+arguments must be in order. If you use the keywords, the order is irrelevant. 
+
+When defining your own functions, optional arguments must be placed after the required arguments. 
+
+\subsection{Multiple Outputs}
+Of course you can return more than a single value, just wrap them in a tuple.
+\begin{verbatim}
+def f(x):
+    return (x,x**2)
+\end{verbatim}
+
+\subsection{Lambda Functions}
+Every once in a while, you need to use a function exactly once. And it's overkill to write an entire
+function to do the job. This is the use of \emph{lambda functions}. For example, lets say we 
+want to sort a list of tuples by the second argument, \texttt{sorted([(3,2),(4,1),(1,3)])} will
+sort by the first coordinate. To fix this,
+\begin{verbatim}
+sorted([(3,2),(4,1),(1,3)],key = lambda x:x[1])
+\end{verbatim}
+The \emph{key} argument is telling the sort function how to sort the list. 
+
+Lambda functions are single use, simple functions. If something is long or complicated, make a real
+function. These may prove useful as we start integrating, differentiating and other fun stuff.
+
+
+
+
+
+
+
+
+
+\section{Reading Files}
+
+
+\subsection{csv}
+Here is a function that will load data from a csv file. 
+\begin{verbatim}
+import csv
+
+def load_csv(file_name)
+    #Load a CSV file where the entries are real numbers. Returns a list of lists, [[row]]
+    data = []
+    with open(file_name,"r") as d:
+        csv_file = csv.reader(d)
+        for row in csv_file:
+            data.append([float(elm) for elm in row])
+    return data
+\end{verbatim}
+Go ahead and try to figure this out. Feel free to use this directly.
+
+
+
+\subsection{text files}
+We won't be loading many text files in this class, but you'll be writing some (as TeX files). Let's talk about the \texttt{open(file,mode= `r',...)}\footnote{Full documentation: \url{https://docs.python.org/3/library/functions.html\#open}, you should practice reading stuff like this.}. 
+\begin{itemize}
+ \item ``file" input is a path to a file, it is relative to your working directory. 
+ \item ``mode'' is how you'll be using it `r' for read, `w' for write. 
+\end{itemize}
+Here is an example writing to a file
+\begin{verbatim}
+out = "I'm a string\nAnd I'm on a new line"
+with open("test.txt","w") as d:
+    d.write(out)
+\end{verbatim}
+If you run this you'll have a file called ``test.txt''. This can be super useful for generating TeX files and outputting results. 
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 2 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+
+\begin{problem}
+Generalize the \texttt{fizzbuzz} program from Homework 01. This time we want an optional argument
+\emph{fizzy} this takes the form of a dictionary and defaults to \texttt{\{3:"fizz",5:"buzz"\}}. 
+In general the input takes form \texttt{\{number:string\}}. The output is similar to fizzbuzz, except
+it uses the numbers and strings. For example, your function definition should have the form
+\begin{verbatim}
+def fizzbuzz(n, fizzy = {3:"fizz",5:"buzz"})
+\end{verbatim}
+
+Here is some sample output of \texttt{fizzbuzz(10,\{2:`Dr. Mitch',3:`Rules'\}}
+\begin{verbatim}
+Dr. MitchRules
+Dr. Mitch
+Rules
+Dr. Mitch
+Dr. MitchRules
+Dr. Mitch
+Rules
+Dr. Mitch
+\end{verbatim}
+
+\end{problem}
+
+
+
+\begin{problem}
+ Write a function that will solve any quadratic polynomial, $ax^2+bx+c=0$. You should have 3 inputs, 
+$a$, $b$ and $c$ and the output should be a list of tuples $[(x_1,x_2),(y_1,y_2)]$ where $x_1<y_1$
+or $x_2<=y_2$ if $x_1=y_1$. This is representing a complex number. If there is only one (or zero) 
+solution the entries should be None (None is a special Python type).
+
+So for example, if the solutions are $3\pm 2i$, the output is $[(3,-2),(3,2)]$. If $3$ is the 
+only solution, the output is $[(3,0),(3,0)]$
+
+The function should be \texttt{quadratic(a,b,c)}.
+
+There is a Pickle file on Canvas to test your function. It's a list of tuples \texttt{(a,b,c,sol1,sol2)}. It'll be a good idea to use \texttt{fuzzy\_equal} to check your answers.
+\end{problem}
+
+
+\begin{problem}
+Write a function that finds the minimal element of a list.
+
+Do not use the built-in ``min'' function. 
+
+The function should be \texttt{my\_min(L)}.
+
+There is a pickle file on Canvas. The format is a list of tuples,
+\texttt{[(List,min)]}
+\end{problem}
+
+
+\begin{problem}
+Write the following piecewise function,
+\[
+f(x) = \left\{\begin{array}{ll} x^2, & x\le-1 \\ \frac{x}{4}-2x, & -1<x<2 \\ 2^{x-1}, & 2\le x \end{array}\right.
+\]
+
+Call the function \texttt{f(x)}.
+
+There is a pickle file on Canvas. It's a list of tuples, \texttt{([x,f(x)])}
+
+\end{problem}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

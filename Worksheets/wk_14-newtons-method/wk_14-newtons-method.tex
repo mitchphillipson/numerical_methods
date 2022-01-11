@@ -1,0 +1,140 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, March 3}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 13 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+\begin{problem}
+\label{drawpic}
+ Draw a picture (like with your hand) of a situation where Newton's method will fail where it 
+cycles $x$ values. Your picture should be moderately accurate. Figure out a way to make this a
+PDF to submit on Canvas. Name the image problem\_\ref{drawpic}.pdf.
+\end{problem}
+
+
+\begin{problem}
+ Draw a picture of a situation where Newton's method will converge to a root, but not the root
+that it's closest to.
+\end{problem}
+
+\begin{problem}
+ Modify your \texttt{newton} function from last time to be more robust. Add the following two
+improvements,
+\begin{enumerate}
+ \item Check if the derivative is 0. If it is, return \texttt{None}
+ \item Add a \texttt{max\_iter} argument that defaults to 50. If the number of loops is larger than
+max\_iter, return \texttt{None}.
+\end{enumerate}
+\end{problem}
+
+
+
+\begin{problem}
+\label{graph1}
+ The goal of this problem is to explore the basins of convergence. Let $f(x) = x^5-4x^3+2x-1$, do 
+the following,
+\begin{enumerate}
+ \item Let $x$ be a linspace from $-2$ to $2$ using $N$ points.
+ \item Create a \texttt{subplots} object with 5 rows (this is 2 plus the number of roots of $f(x)$.)
+ \item In the first row plot $f(x)$ together with the line $y=0$. 
+ \item For each point in $x$, determine which $0$ (if any) the point converges to. Store this in 
+a list or array. If it doesn't converge to a zero, store that too.
+ \item On each subsequent row, graph the function and $y=0$ and the points for each zero as 
+``.''. 
+ \item Save the figure as a pdf.
+\end{enumerate}
+You'll probably have to mess with the figsize in subplots to get everything to display nicely.
+
+Submit the figure on Canvas, and describe what you see and what you find surprising. Name the PDF
+problem\_\ref{graph1}.pdf.
+
+\end{problem}
+
+
+\begin{problem}
+\label{graph2}
+ Repeat the previous problem except with,
+\[
+f(x) = x^8-2x^7-x^6+12x^5-21x^4-18x^3+41x^2+8x-22
+\]
+I recommend a domain of $[-2.05,2.1]$. 
+Submit the figure on Canvas, and describe what you see and what you find surprising. Name the 
+image problem\_\ref{graph2}.pdf.
+\end{problem}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

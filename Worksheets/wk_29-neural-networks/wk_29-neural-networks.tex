@@ -1,0 +1,250 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Tuesday, May 3}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 29\ \\[2ex] Neural Networks}}\\
+\end{center}
+\vspace{2mm}
+
+
+%\section{Reading}
+
+%\begin{table}[!ht]
+% \centering
+% \begin{tabular}{lc}
+%   CP &  - \\
+% NMEP &  -
+% \end{tabular}
+%\caption{Sections Covered}
+%\end{table}
+
+
+\section{Overview}
+
+What is Pandas?\footnote{It's an endangered bear native to China, but that's not important right
+now} Pandas is a data manipulation tool that has gained popularity due to its ease of use and 
+expandability.
+
+Spyder is built to use Pandas naturally and fluidly. If you aren't using Spyder, good luck. We'll
+be transitioning from the text editor to the iPython terminal quite frequently. If you don't have
+Spyder, this will be far more difficult. 
+
+
+
+\section{Pandas - A Simple Example}
+Let's say we have a data set that we'd like to analyze. For now that will be ``housing.csv" on
+Canvas. This is a dataset about housing prices in California.  Here is the code I would enter to 
+load the data into Python,
+\begin{verbatim}
+import pandas as pd
+import numpy as np
+
+data = pd.read_csv("data/housing.csv")
+\end{verbatim}
+This doesn't print anything... Go to the interpreter (the thing where graphs and output display),
+type \texttt{data} and hit enter. You should have seen a large display of data. Scroll up to see
+some of the column IDs. This doesn't show all the columns, to see what they are type,
+\begin{verbatim}
+data.columns
+\end{verbatim}
+
+The columns ``median\_housing\_value" and ``ocean\_proximity" look interesting. Let's make a boxplot
+using these variables. Using Logic, it would make sense that closer to the ocean leads to higher
+housing values. Lets find out,
+\begin{verbatim}
+data.boxplot("median_house_value",by = "ocean_proximity")
+\end{verbatim}
+The boxplot does verify our suspicions, at least a little. There are a ton of outliers in the ``INLAND"
+category.
+
+
+
+\section{Working with Data}
+The core data structure in Pandas is called a DataFrame. Think of a dataframe almost like a spreadsheet,
+it has rows and columns. You should organize data so that each column is a Variable and each
+row is an Observation. 
+
+The housing data is already like this. Each column is a different property (or variable) and each
+row represents a neighborhood (an observation). Typically data is not this nice and needs manipulating 
+to make look nice. Pandas has many, many methods to help you do this. We're skipping it all.
+
+
+Extracting columns is similar to using a dictionary. For example, say we wanted to know the average 
+number of bedrooms. We just need to type,
+\begin{verbatim}
+data['total_bedrooms'].mean()
+\end{verbatim}
+and we see the mean is 537.8. To see even more statistics type,
+\begin{verbatim}
+data['total_bedrooms'].describe()
+\end{verbatim}
+Of course you could just type 
+\begin{verbatim}
+data.describe()
+\end{verbatim}
+but this may be too much useless info (like latitude/longitude). 
+
+You can select multiple columns,
+\begin{verbatim}
+data[['total_bedrooms','population']].describe()
+\end{verbatim}
+Notice you need to put a list inside the selection. That's because it's usually used like this,
+\begin{verbatim}
+columns = ['total_bedrooms','population']
+data[columns].describe()
+\end{verbatim}
+
+
+Suppose you wanted to see the average number of people in each household in a given region.
+To get that you would take the population divided by the number of households. This is easily
+done in Pandas using array vectorization.
+\begin{verbatim}
+data['density'] = data['population']/data['households']
+\end{verbatim}
+
+
+
+
+\section{Graphing and Filtering}
+There are many, many ways to plot in Pandas. The easiest is using \texttt{data.plot}. In the
+interpreter type \texttt{data.plot.} and press tab. You'll see a bunch of plotting options. 
+Let's make a scatterplot with population on the $x$-axis and median house value on the 
+$y$-axis.
+\begin{verbatim}
+data.plot.scatter("population","median_house_value")
+\end{verbatim}
+This is equivalent to,
+\begin{verbatim}
+data.plot("population","median_house_value",'scatter')
+\end{verbatim}
+Both methods are valid and both work and both have advantages/disadvantages. Remember you can
+view method syntax by typing \texttt{data.plot?} in the interpreter. 
+
+
+Let's say you only wanted to see the above plot for properties that are classified as being 
+near the bay. Pandas is built on top of Numpy, you can use array filtering and slicing naturally.
+\begin{verbatim}
+X = data[data['ocean_proximity'] == "NEAR BAY"]
+X.plot.scatter("population","median_house_value")
+\end{verbatim}
+You should also view $X$. You'll see all the ocean proximities are near the bay.
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 29 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+Include all graphs in your write up of the problems.
+
+\begin{problem}
+In the ``housing.csv'' dataset, how many regions are in each category of the ``ocean\_proximity'' 
+column?
+\end{problem}
+
+
+\begin{problem}
+Create a ``density'' column (we did this in the worksheet, that you read and understood). Make
+a table of the descriptive statistics and a boxplot of this column. Describe what you see
+and speculate what is happening. 
+\end{problem}
+
+
+\begin{problem}
+ You should have noticed something bizarre in the previous problem. Use array filtering to find 
+the largest density outlier. What California city is this data point closest to?
+\end{problem}
+
+
+
+\begin{problem}
+ Do something similar to the ``density'' column except compare median income and median house value.
+Try to figure out what's happening here.
+\end{problem}
+
+
+
+\begin{problem}
+Explore the dataset further. Make several graphs and describe what you see and find.
+\end{problem}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

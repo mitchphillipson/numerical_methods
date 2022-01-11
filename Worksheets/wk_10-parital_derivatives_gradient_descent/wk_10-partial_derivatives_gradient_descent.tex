@@ -1,0 +1,167 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, February 17}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 10\ \\[2ex] Partial Derivatives and Gradient Descent}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  5.11 \\
+ NMEP & 3.1, 3.2
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{Partial Derivatives}
+You basically just think coordinate wise. If $f_x(a,b) = \frac{\partial}{\partial x} f(x,y)\vert_{(a,b)}$, then 
+\begin{equation*}
+ f_x(a,b) = \lim_{h\rightarrow 0} \frac{f(a+h,b) - f(a,b)}{h}
+\end{equation*}
+This should be fairly straightforward. 
+
+You can also do central differences, which is far more powerful.
+\begin{equation*}
+ f_x(a,b) = \lim_{h\rightarrow 0} \frac{f(a+h,b) - f(a-h,b)}{2h}
+\end{equation*}
+
+
+\section{Gradient Descent}
+Once again, you need to think about this coordinate wise. The process is going to be exactly same as optimizing a single value function. However, you should be vectorizing the operations. Each coordinate is can be found using
+\begin{equation*}
+ x_i = x_i - \alpha f_{x_i}(x).
+\end{equation*}
+This is going to test your understanding of vectorizing. 
+
+
+
+
+
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 10 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+\begin{problem}
+ Let $f:\mathbb{R}^n \rightarrow R$ we'll represent $f(x)$ as a function that takes in an array $x$. Write a function \texttt{partial(f,x,i,h=1e-8)} that will calculate the partial derivative, $f_i(x)$ at the point $x$.
+\end{problem}
+
+
+\begin{problem}
+ Create a function \texttt{gradient(f,x,h=1e-8)} that returns a column vector so that the i'th coordinate is $f_i(x)$.
+\end{problem}
+
+\begin{problem}
+ Create a function \texttt{gradient\_descent(f,x,alpha=.1,max\_iter=50,h=1e-8)} that approximates the minimum of $f$ using the starting point $x$ with learning rate $\alpha$ and a maximum number of iterations. 
+\end{problem}
+
+
+\begin{problem}
+ Use your function to approximate the minimum of $f(x,y) = x^2+y^2$. You should know what the minimum is so you can verify if you got it right. Call your function \texttt{problem\_4} (instead of $f$). Try several different starting values and learning rates.
+\end{problem}
+
+
+\begin{problem}
+ Use your function to approximate the minimum of $f(x_1,x_2,x_3,x_4,x_5) = \sum x_i^2$. You should know what the minimum is so you can verify if you got it right. Call your function \texttt{problem\_5} (instead of $f$, although if you do Problem 4 ``correctly'' you can use the same function, but still have problem\_5).
+\end{problem}
+
+
+\begin{problem}
+ Use your function to approximate the minimum of $f(x_1,x_2,x_3,x_4,x_5) = \sum x_i^2 + 2x_i$. You should know what the minimum is so you can verify if you got it right. Call your function \texttt{problem\_6} (instead of $f$)
+\end{problem}
+
+
+\begin{problem}
+ Gradient descent will only find a single minimum, so there could be an issue with local minimums. This turns out to not be an issue for very high dimensional data. Can you think of a justification why this would be true? Submit your answer as a PDF. 
+\end{problem}
+
+\begin{problem}
+ This is an optional problem. Explore how to plot 3d functions in Python. Plot a function, use gradient descent to find the minimum, and plot the point on the graph. Hopefully the minimum you find coincides with the minimum.
+\end{problem}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,241 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Tuesday, February 15}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+\newcommand{\bigO}{\mathcal{O}}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 9\ \\[2ex] Differentiation}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section*{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  5.10\\
+ NMEP & 5.1, 5.2
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+
+\section{Derivatives}
+
+As you should know, the standard definition the derivative
+\begin{equation}
+\label{eqn:forward}
+f'(x) = \lim_{h\rightarrow 0}\frac{f(x+h)-f(x)}{h}
+\end{equation}
+is inadequate as there can be numeric error in the division. There actually isn't anything
+we can do about this. 
+
+
+Let's do some Taylor series. Recall,
+\begin{align*}
+ f(x+h) &= f(x) + hf'(x) + \frac{h^2}{2}f''(x) + \frac{h^3}{6}f'''(x)+\cdots \\
+ f(x-h) &= f(x) - hf'(x) + \frac{h^2}{2}f''(x) - \frac{h^3}{6}f'''(x)+\cdots.
+\end{align*}
+Subtract these and solve for $f'(x)$ to see,
+\begin{equation}
+ \label{eqn:central}
+ f'(x) = \frac{f(x+h)-f(x-h)}{2h} + \bigO(h^2).
+\end{equation}
+This is called a \emph{central difference} and it's order $h^2$ which is better than order
+$h$, like (\ref{eqn:forward})\footnote{Why is (\ref{eqn:forward}) order $h$?}. Central 
+differences are more accurate using larger values of $h$.
+
+There are also \emph{forward differences}, this is (\ref{eqn:forward}), and \emph{backward differences}.
+You should be able to guess what a backward difference is, but just in case,
+\[
+\frac{f(x)-f(x-h)}{h}
+\]
+
+You'll primarily use forward and backward differences when dealing with sequential data. If your
+data looks like $x_0,x_1,x_2,\dots$, you can't use central differences to evaluate the derivative
+at $x_0$, you must use a forward difference.
+
+\section{Second Derivatives and Higher Order}
+When posed with a problem, the only logical solution is Taylor series. The idea with be to 
+expand $f(x+ih)$ for numbers $i$ (preferably integers) and solve for $f^{(n)}(x)$ canceling
+lower order derivatives. 
+
+For example, using the following expansions,
+\begin{align*}
+  f(x+h) &= f(x) + hf'(x) + \frac{h^2}{2}f''(x) + \frac{h^3}{6}f'''(x)+\cdots \\
+ f(x-h) &= f(x) - hf'(x) + \frac{h^2}{2}f''(x) - \frac{h^3}{6}f'''(x)+\cdots \\
+ f(x+2h) &= f(x) + 2hf'(x) + \frac{4h^2}{2}f''(x) + \frac{8h^3}{6}f'''(x)+\cdots \\
+ f(x-2h) &= f(x) - 2hf'(x) + \frac{4h^2}{2}f''(x) - \frac{8h^3}{6}f'''(x)+\cdots.
+\end{align*}
+We can find that,
+\begin{align*}
+ f''(x) &= \frac{f(x+h)-2f(x)+f(x-h)}{h^2} + \bigO(h^2) \\
+ f^{(3)}(x) &= \frac{f(x+2h)-2f(x+h)+2f(x-h)-f(x-2h)}{2h^3} + \bigO(h^2) \\
+ f^{(4)}(x) &= \frac{f(x+2h)-4f(x+h)+6f(x)-4f(x-h)+f(x-2h)}{h^4} + \bigO(h^2).
+\end{align*}
+
+These are all central differences, similar formulas exists for noncentral differences.
+
+
+\section{The Problem with Derivatives}
+We'll always be dividing by small numbers. This is especially true for $f^{(n)}(x)$. Combine this
+with,
+\begin{enumerate}
+ \item Most problems being able to be phrased in terms of an integral
+ \item We can easily evaluate all explicit derivatives
+\end{enumerate}
+and we tend to not use differentiation that frequently. There are situations where differentiation
+is essential. But that's a future problem.
+
+
+
+
+\section{Optimization}
+Finding the max or min of a function is quite important. This is relatively easy to do with calculus\footnote{For a single value function.}, but can we do it numerically? Yes, of course. We are going to focus on minimums, maximums are identical just different\footnote{So not identical?}. 
+
+Consider $f(x) = x^2$. This has a minimum at $x=0$. Let's find this numerically. Pick a starting point, let's say $x_0=2$. It turns out $x_1 = x_0 - \alpha\cdot f'(x_0)$ where $\alpha$ is a chosen number (sometimes called the ``learning rate'' for reasons), if $\alpha = .1$ then,
+\begin{align*}
+ x_1 = 2 - .1\cdot (2\cdot 2) = 2-.4 = 1.6.
+\end{align*}
+This moved us closer to 0!
+
+Why does this work? If $f'(x)>0$ then the function will have a minimum to the left of $x$ and if $f'(x)<0$ the min will be to the right. That's about it. The parameter $\alpha$ controls how large a step we take, if it's too big we'll keep jumping over the minimum and if it's too small we won't go anywhere. Right now you should draw $x^2$ on your paper and verify what you read in this paragraph. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 9 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+\begin{problem}
+ Write two functions, \texttt{diff} and \texttt{diff\_2} for the first and second derivatives using
+central differences. The input of these should be \texttt{f,x,h=.01} where $f$ is a function.
+\end{problem}
+
+\begin{problem}
+ Given $f(x) = 3x^4+3x^3-2x+1$ find $f'(x)$ and $f''(x)$ by hand. Use your programs to compare the exact answers with approximation for $x\in\{-5,-4,\dots,4,5\}$. Make a table and put in a PDF.
+\end{problem}
+
+
+\begin{problem}
+ Given $f(x) =\frac{1}{1+e^{-x}}$ find $f'(x)$ and $f''(x)$ by hand. Use your programs to compare the exact answers with approximation for $x\in\{-5,-4,\dots,4,5\}$. Make a table and put in a PDF.
+ 
+ Also make a graph with $f,f',f''$ on the same axes. Label them accordingly. You should use your \texttt{diff} and \texttt{diff\_2} programs for this.
+\end{problem}
+
+
+
+
+
+\begin{problem}
+ Write a function called \texttt{gradient\_descent} with inputs \texttt{f, a, alpha, tol=1e-9, max\_iter=500} that approximates a minimum of $f(x)$ with starting point $a$ and learning rate alpha. The tol value is a tolerance, if $\vert x_n - x_{n+1}|<\textrm{tol}$ then you can conclude $x_n$ is a minimum. max\_iter is the maximum number of iterations (to prevent an infinite loop). In \texttt{diff} use \texttt{h=1e-9}.
+ 
+ Return a tuple \texttt{(x\_n, points)} where $x_n$ is the $x$-value of the min and \texttt{points} is a list containing all the points generated by your process. 
+ 
+ Test your function with $x^2$ and a few starting points.
+\end{problem}
+
+
+\begin{problem}
+ Run \texttt{gradient\_descent} with $f(x) = x^2$, $a = 2$. Answer each of these questions in a PDF (with your graphs) for $\alpha \in [.1,.5,1]$.
+ \begin{enumerate}
+  \item How many iterations did the algorithm use? 
+  \item How many of those iterations had values less than $.1$?
+  \item What do you think explains the large number of steps with small values?
+  \item How could we have fixed this issue?
+ \end{enumerate}
+\end{problem}
+
+
+\begin{problem}
+Make a graph of $f(x) = x^2$ from -2 to 2 and the points you found in the previous problem for $\alpha = .1$. You should have a line ($x^2$) with a bunch of dots on it. 
+\end{problem}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

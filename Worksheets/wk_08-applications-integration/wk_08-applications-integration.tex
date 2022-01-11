@@ -1,0 +1,158 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, February 10}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 8 (Due: \due)\ \\[2ex] Applications of Integration}}\\
+\end{center}
+\vspace{2mm}
+
+%\section{Reading}
+
+%\begin{table}[!ht]
+% \centering
+% \begin{tabular}{ll}
+%   CP & 5.2, 5.3, 5.4 \\
+% NMEP & 6.3
+% \end{tabular}
+%\caption{Sections Covered}
+%\end{table}
+
+
+Create a file called ``name\_integrals.py'', where name is your name (or initials or something short).
+In this file put the functions \texttt{latex\_table}, \texttt{trapezoidal}, \texttt{trap\_error},
+and \texttt{romberg}. Modify the last two to only return the value of the integral (not the number
+of steps).
+
+
+\begin{problem}
+ Not all integrals are over a finite domain. For example, our methods will fail if we want to evaluate
+$\int_0^{\infty} f(x)\,dx$. This is solved using a change of variables. We want a function, $F(x)$,
+defined on the interval $(a,b)$ so that $\lim_{n\rightarrow a} F(x) = 0$ and 
+$\lim_{n\rightarrow b} F(x) = \infty$. One common function is,
+\[
+F(x) = \frac{x}{1-x}
+\]
+\end{problem}
+on the interval $(0,1)$. The transformation is then,
+\[
+\int_0^1 f(F(t))F'(t)\,dt = \int_0^1 f\left(\frac{t}{1-t}\right)\cdot\frac{1}{(t-1)^2}\,dt.
+\]
+Another function, that may be better, is,
+\[
+F(x) = \tan(x).
+\]
+This has the benefit of being able to transform the domain $(-\infty,\infty)$.
+
+The \emph{normal distribution} is given by,
+\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}.
+\]
+Where $\mu$ is the mean and $\sigma$ is the standard deviation. This is typically standardized
+so that $\mu=0$ and $\sigma=1$. We'll assume $f(x)$ is the standardized curve.
+
+\begin{enumerate}
+ \item Verify that $\displaystyle\int_{-\infty}^\infty f(x) = 1$.
+ \item In statistics it's important to be able to evaluate $\int_{-\infty}^a f(x)\,dx$. To do this
+they use a table, see Canvas for an example (normal.pdf). This table shows all values of that
+integral for $-3.49\le a\le 3.49$ in steps of $.01$. Remake this table accurate to 6 decimals.
+\end{enumerate}
+
+
+
+
+\begin{problem}
+ the Gamma function is a highly important function in Mathematics, Physics, Chemistry, and 
+Statistics. The Gamma function is defined for $x>0$,
+\[
+ \Gamma(x) = \int_0^\infty t^{x-1}e^{-t}\,dt
+\]
+
+\begin{enumerate}
+ \item Write a function to evaluate $\Gamma(x)$.
+ \item Make a table evaluating $\Gamma(x)$ for integers $i=1,2,\dots,30$. 
+ \item You should recognize the numbers you just computed. What are they? You may need to 
+increase your tolerance to see this.
+ \item Plot both $\Gamma(x)$ and $\Gamma(x)+\sin(\pi x)$ on the same axes. Save this figure 
+and include it in the PDF. You can see they intersect, where do you think they intersect?
+\end{enumerate}
+
+
+
+\end{problem}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

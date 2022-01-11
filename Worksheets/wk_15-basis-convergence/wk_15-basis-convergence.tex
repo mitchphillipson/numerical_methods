@@ -1,0 +1,130 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Tuesday, March 8}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 15 (Due: \due)\ \\[2ex] Basins of Convergence}}\\
+\end{center}
+\vspace{2mm}
+
+%\section{Reading}
+
+%\begin{table}[!ht]
+% \centering
+% \begin{tabular}{ll}
+%   CP & 5.2, 5.3, 5.4 \\
+% NMEP & 6.3
+% \end{tabular}
+%\caption{Sections Covered}
+%\end{table}
+
+\begin{problem}
+ Did you know Newton's method works for complex zeros as well? Try it, set $f(x)=x^5-4x^3+2x-1$
+and run Newton's method with $x_0=1j$ (this is the $i$ in Python). For this problem we are going 
+to enhance the images we made last time, this time we'll work over the complex plane. To do
+this, do the following.
+\begin{enumerate}
+ \item Since we're dealing with floats, create a \texttt{fuzzy\_equal} function that returns True
+if the difference between two numbers is ``small'' ($<10^{-6}$) and False otherwise.
+
+ \item Create a function \texttt{find\_zeros} that will... find the zeros of a function. To do
+this search a $10\times 10$ grid from $(a,b)\times (a,b)$, these are complex numbers. You should
+return a list containing the zeros. In general, this may not find all the zeros. 
+
+\item Create another function \texttt{find\_basins}. This funtion will return an $N\times N$ grid
+of integers which correspond to the index of that root in the zero list. To create this, I recommend
+starting with an $N\times N$ grid of complex numbers, using those to find the convergence root,
+and then finding the index in the list.
+
+\item Use \texttt{plt.imshow} to plot the result of \texttt{find\_basins}. Save your figure as a 
+PDF. You'll submit it on Canvas.
+
+\end{enumerate}
+\end{problem}
+
+
+\begin{problem}
+ Use the previous problem to create a graph of the convergence of your ID polynomial. Suppose your
+ID number is 1234567, your ID polynomial is,
+\[
+ f(x) = x^6+2x^5+3x^4+4x^3+5x^2+6x+7.
+\]
+\end{problem}
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

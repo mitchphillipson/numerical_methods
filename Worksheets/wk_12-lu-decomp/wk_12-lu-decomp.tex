@@ -1,0 +1,215 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, February 24}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 12\ \\[2ex] LU-Decomposition}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  6.1 \\
+ NMEP & 2.1, 2.2, 2.3, 2.5
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{$LU$-decomposition}
+As you should have already seen, solving a system that is triangular is quite easy. That's the basic
+idea behind $LU$-decomposition, write $A = LU$ where $L$ is lower triangular and $U$ is upper 
+triangular. The idea is that if $Ax=b$ and $A = LU$, then $LUx=b$, so we solve $Ly=b$ then $Ux = y$. 
+
+How do we find $L$ and $U$? Suppose
+\[
+ A = \begin{bmatrix}
+a_{00} & a_{01} & a_{02} \\
+a_{10} & a_{11} & a_{12} \\
+a_{20} & a_{21} & a_{22} 
+\end{bmatrix}
+\]
+Think about Gaussian elimination in terms of matrix multiplication. The first step of Gaussian
+elimination is to make the top left be 1, and make 0's below it. If
+\[
+ T_1 = \frac{1}{a_{00}}\begin{bmatrix}
+1 & 0 & 0 \\
+-a_{10} & a_{00} & 0 \\
+-a_{20} & 0 & a_{00}
+\end{bmatrix}
+\]
+then,
+\[
+T_1A = \begin{bmatrix}
+1 & b_{01} & b_{02} \\
+0 & b_{11} & b_{12} \\
+0 & b_{21} & b_{22} \\
+\end{bmatrix}
+\]
+The trick here was finding $T_1$. Do the multiplication $T_1A$ on a piece of paper to see exactly what is happening. Try to justify to yourself where ``Gaussian Elimination'' comes into play.
+
+Do this two more times to find,
+\begin{align*}
+T_2 &= \frac{1}{b_{11}}\begin{bmatrix}
+b_{11} & 0 & 0 \\
+0 & 1 & 0 \\
+0 & -b_{21} & b_{11}
+\end{bmatrix}
+&
+T_3 &= \frac{1}{c_{22}}\begin{bmatrix}
+c_{22} & 0 & 0 \\
+0 & c_{22} & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\end{align*}
+
+Combining these we see,
+\[
+T_3T_2T_1A = U
+\]
+where $U$ is upper triangular. Set $L = T^{-1}$, or $L_i = T_i^{-1}$, and we finally have
+\[
+ A = LU
+\]
+where $L$ is lower triangular.
+
+It's easy to see,
+\begin{align*}
+T_1^{-1} &= \begin{bmatrix}
+a_{00} & 0 & 0 \\
+a_{10} & 1 & 0 \\
+a_{20} & 0 & 1
+\end{bmatrix}
+&
+T_2^{-1} &= \begin{bmatrix}
+1 & 0 & 0 \\
+0 & b_{11} & 0 \\
+0 & b_{21} & 1
+\end{bmatrix}
+&
+T_3^{-1} &= \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & c_{22}
+\end{bmatrix}
+\end{align*}
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 12 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+
+\begin{problem}
+ Write a function called \texttt{forwardsub(A,b)} that takes an lower-triangular matrix $A$ and
+a column vector $b$ and returns a vector $x$ so that $Ax=b$. 
+\end{problem}
+
+
+
+\begin{problem}
+\label{prob:lu}
+  Write a program called \texttt{lu\_decomp} that finds the $LU$-decomposition of a matrix $A$. Your input should be \texttt{A} where $A$ is a matrix (as a nested array) and $b$ is a column array. Return a tuple \texttt{L,U}.
+\end{problem}
+
+\begin{problem}
+ Write a program called \texttt{lu\_solve} that solves a system $Ax=b$ using $LU$-decomposition. You input should be \texttt{L,U,b} where $Ax=b$ and $A=LU$. The output is a column vector \texttt{x}.
+\end{problem}
+
+
+
+\begin{problem}
+$LU$-decomposition is a lot of work, it's computationally intensive. Why do we do this as opposed to Gaussian Elimination? The answer is when you need to solve a system more than once. You can cache (or save) the $LU$-decomposition and quickly solve follow up systems of equations. Let's test this. The file ``LU.pickle'' on Canvas contains a list of tuples of the form \texttt{[(A,[b])]}, where $[b]$ is a list of solutions. For each $A$, time how long it takes to 
+\begin{enumerate}
+ \item Use Gaussian Elimination to solve $Ax=b$ for each b
+ \item Find $LU$-decomposition and use that to solve $LUx=b$ for each b\footnote{you should only find the $LU$-decomp once}.
+\end{enumerate}
+Make a table to compare the evaluation times, include a column with the number of $b$'s for each $A$. Write a little paragraph discussing the results.\footnote{I didn't see any speed improvements. Do you?} 
+\end{problem}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

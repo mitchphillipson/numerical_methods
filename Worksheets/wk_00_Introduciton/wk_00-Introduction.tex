@@ -1,0 +1,285 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+%\pagestyle{fancy}
+%\lhead{ }
+%\chead{\footnotesize Math 2413\quad  Calculus 1\quad  Fall 2016}
+%\rhead{\footnotesize \thepage}
+%
+%\cfoot{}
+%
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338}\\[1.5ex]
+{\Large{\bf Worksheet 0\ \\[2ex] Installing Python3 and First Program}}\\
+\end{center}
+\vspace{2mm}
+
+You are expected to complete this before the first day of class. It's highly recommended to bring
+your laptop to class, although there will be limited computers available.
+
+
+\section{Directory Structure}
+Before we do anything, lets setup a nice directory structure. Go to your documents folder and create a folder called ``Numerical\_Methods" (use the underscore, spaces will prove to be annoying in the future). Inside this folder, make another folder called ``Worksheets". Believe it or not, this is where we'll store Worksheets. 
+
+Each Worksheet will end up being it's own ``Project", which will isolate it from other worksheets. Python always looks within it's own folder for dependencies and having too many objects can cause confusion.
+
+
+\section{Installing Python3}
+
+Visit the following link \url{https://www.anaconda.com/distribution/} and download and install 
+the Python 3.10\footnote{or, you know, whatever the newest version is. 3.11?} version.
+
+You now have Python 3.10 installed. Congratulations. 
+
+
+\section{Using Python3}
+One of the programs you installed is called Spyder. Find this program and open it. This will be our primary IDE (Integrated Development Environment), so we should get used to it. In the toolbar (at the top) find the Projects menu and select ``New Project...''. We want a New Directory, set the project name to wk\_00 (or something to signify it's Worksheet 00). Change the location to the Worksheet folder in the Numerical\_Methods folder. You'll follow this process for every worksheet (you'll change the name though). Spyder will open a default file ``temp.py'', \textbf{\underline{DO NOT USE THIS}}, open a new file. 
+
+
+Time to start coding. You should see file with some writing in it. This is a script file, and it's how we'll be doing homework. Save this file and give it a good name (I called mine ``first.py'', that's not a great name). Notice, by default it saves it in the Project folder. This is good.
+
+Click the bottom of the blank file and type,
+\begin{verbatim}
+print("Hello World!")
+\end{verbatim}
+Click the big green arrow at the top of the screen (or press F5 on your keyboard, if you're using a laptop you may need to press Fn+F5). Somewhere in Spyder you should see the ``iPython Console'' and in that console you should see the phrase ``Hello World!''. This is the stereotypical first program. Even though it's not really a program. 
+
+If this did not work (it gives you an error), you must stop by my office before class. We're not going to have time to get stuff working in class.
+
+
+We will be using the iPython console quite a bit. Your IDE needs to be able to iPython, this is why we will be using Spyder. 
+
+\section{A Review of Python}
+
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP & 2.2.1, 2.4 \\
+ NMEP &  1.2 
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+
+On every worksheet, I'll include a table like this. ``CP'' stands for ``Computational Physics''. This is the required text for the course. ``NMEP'' stands for ``Numerical Methods in Engineering with Python3'' this is the optional book for the course. It is not required to purchase but you should \emph{carefully search for the lowest price}.
+
+The remainder of this worksheet is a review of Python. You should go through this even if you are proficient in Python. You may learn a couple of things. If you are nervous with Python, this will help you be at the required level.
+
+
+
+\subsection{variables}
+To store a variable use $=$. Try the following,
+\begin{verbatim}
+banana = 6
+print(banana)
+\end{verbatim}
+Now the variable \emph{banana} is 6. You should have seen this printed. Python will always guess the
+\emph{type} of a variable. In this case, banana is an integer. There are many, many types.
+
+\begin{verbatim}
+banana = banana + 7 #banana is now 13
+banana += 4 #banana is now 17. This is easier than the previous
+banana *= 2 #banana is 34
+banana *= 1.0 #banana is now 34.0, indicating a floating point number
+\end{verbatim}
+Try the previous commands. Feel free to include some print statements to see the value of banana
+at each step. \# signifies the beginning of a comment.
+
+
+\subsection{strings}
+Strings are basically words. To define a single line string use either `` or `, a multiline string
+is three quotes. For example,
+\begin{verbatim}
+string1 = "I'm a string!"
+string2 = `Me too'
+string3 = """I'm a multiline string
+see
+I'm 
+on 
+another LEVEL"""
+\end{verbatim}
+Try printing these as well. Strings can be joined using the ``+'' operation.
+\begin{verbatim}
+print(string1+ " middle " + string2)
+\end{verbatim}
+
+
+The type of a string is \emph{str}. Whenever you encounter something
+new in Python, it's helpful to know what you can do with it. In the Console window (where you saw
+the output), try typing
+\begin{verbatim}
+help(str)
+\end{verbatim}
+This will list everything you can do with a string with a description of what it does. At the moment
+this is information overload. Let's take a single example, the function \emph{upper}. The description
+says it will make a copy of S in uppercase. Let's try,
+\begin{verbatim}
+upper_string = string1.upper()
+print(upper_string)
+\end{verbatim}
+Notice, since \emph{upper} belongs to the string type, it goes after the variable as ``.function()".
+In programmer terms, upper is a method is the string class.
+
+
+\subsection{tuples}
+
+A \emph{tuple} is a static sequences of things. In programmer terms it is an \emph{unmutable} type,
+it can't be mutated. 
+\begin{verbatim}
+t = (1,2,"a","hello there")
+\end{verbatim}
+This defines a tuple. Tuples can contain any type of object, although it can be bad practice to put
+types that are mutable in a tuple (like a \emph{list} below). 
+
+You can access elements of a tuple,
+\begin{verbatim}
+print(t[0],t[1])
+print(t[3])
+\end{verbatim}
+Notices, tuples are indexed starting at 0.
+
+Type ``help(tuple)'' in the interpreter (without quotes). Notice you can do far less with tuples 
+than you could with strings. Notice there are a bunch of methods that start and end with two \_,
+these are operator methods. This defines things like an ordering ($<$) and other helpful things.
+
+In particular, lets explore 
+\begin{verbatim}
+__len__(self,/)
+\end{verbatim}
+This tells us we can use the ``len'' function on tuples. Try the following,
+\begin{verbatim}
+print(len(t))
+\end{verbatim}
+If you guessed this will print the length of $t$, you are correct. 
+
+\subsection{lists}
+A \emph{list} is similar to a tuple, except it's mutable. This makes it really versatile and useful.
+\begin{verbatim}
+L = [1,2,"a","hello there"]
+\end{verbatim}
+This defines a list. Try to determine what the following will do,
+\begin{verbatim}
+L[0] = 10
+L[2] += "b"
+L[-1] += ". General Kenobi"
+\end{verbatim}
+If you print $L$, you'll see the results. Try the same with the tuple $t$ and you'll get an error.
+
+Type ``help(list)'' in the interpreter, and you'll see a wide variety of things you can do to a list.
+Throughout the semester we'll use most of these. Let reverse $L$.
+\begin{verbatim}
+L.reverse()
+print(L)
+\end{verbatim}
+Notice this function \emph{changed $L$ in place}. This has advantages and disadvantages. 
+
+You can also put lists inside of lists. Or lists, inside lists, inside lists. 
+\begin{verbatim}
+L = [[1,2,3],[4,5,6],[7,8,9]]
+\end{verbatim}
+You should think about what $L[0]$ is and the difference between $L[0]$ and $L[0][0]$.
+
+\subsection{dictionaries}
+A dictionary is a hash table. This probably doesn't make sense. A list is indexed by integers,
+if you want the $10^{th}$ element of a list, the computer has to walk through the previous $9$ 
+entries to find the $10^{th}$. This can be slow. A dictionary just knows where each element is 
+located (it uses an object hash). 
+
+Dictionaries have the form \{key:value\}, where a key is any \emph{hashable} type, which must be
+unmutable. In particular a list cannot be a key, but strings and tuples can. The values can be any
+type.
+
+\begin{verbatim}
+d = {1:"value","a":10,(1,2):[7,8]}
+\end{verbatim}
+This defines a dictionary. To call an element from a dictionary, use it's key.
+\begin{verbatim}
+print(d[1])
+print(d["a"])
+print(d[1,2])
+\end{verbatim}
+The last one was special. You should figure out why. To add a new key,
+\begin{verbatim}
+d[10] = "new thing"
+print(d)
+\end{verbatim}
+
+Type ``help(dict)'' to see the dictionary methods. 
+
+As you first start using Python, Lists seem like the best data structure. As you get more
+experienced, you realize dictionaries are the best. 
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

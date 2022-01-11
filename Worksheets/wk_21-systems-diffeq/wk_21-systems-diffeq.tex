@@ -1,0 +1,200 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Tuesday, April 5}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 21\ \\[2ex] Systems of Differential Equations}}\\
+\end{center}
+\vspace{2mm}
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  8.1, 8.2 \\
+ NMEP &  Chapter 7
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{Overview}
+Believe it or not, not everything depends on only one variable. In these problems it's going 
+to be convenient to consider our independent variable as time, $t$. Suppose we have functions 
+$x_i(t)$ for $1\le i \le n$ and relations,
+\[
+ \frac{dx_i}{dt} = f_i(t,x_1,\dots,x_n).
+\]
+This creates a system of differential equations. We want to solve this system. 
+
+To solve this, we are going to modify this into a vector equation. Let $\vec{x}(t) = (x_1(t),\dots,x_n(t))$
+and $\vec{f} = (f_1,\dots,f_n)$. Then, our system becomes
+\[
+ \frac{d\vec{x}}{dt} = f(t,\vec{x}).
+\]
+Writing like this allows us to vectorize Runge-Kutta,
+\begin{align*}
+        \vec{k}_1 &= hf(t,\vec{x}) \\ 
+        \vec{k}_2 &= hf(t+.5h,\vec{x}+.5\vec{k}_1) \\
+        \vec{k}_3 &= hf(t+.5h,\vec{x}+.5\vec{k}_2) \\
+        \vec{k}_4 &= hf(t+h,\vec{x}+\vec{k}_3) \\
+        \vec{x}_{new} &= \vec{x}+1/6(\vec{k}_1+2\vec{k}_2+2\vec{k}_3+\vec{k}_4).
+\end{align*}
+
+
+In other words, multidimensional Runge-Kutta is just Runge-Kutta in each dimension.
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 21 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+
+\begin{problem}
+ Modify your \texttt{runge\_kutta} method from last time to handle multidimensional array inputs. 
+In other words, \texttt{runge\_kutta} should accept a function $f$ that returns an array, and the
+input $y_0$ should be an array.
+
+This function should use vectorization \emph{and should be identical (or very similar) to your
+original function}. For example, when I wrote mine I changed two small things. And that's it.
+\end{problem}
+
+
+
+\begin{problem}
+ The Lotka-Volterra equations are a mathematical model of predator-prey interactions between
+biological species. Let two variables $x$ and $y$ be proportional to the size of populations of
+two species, traditionally ``rabbits'' and ``foxes''. 
+
+In the Lotka-Volterra model the rabbits reproduce at a rate proportional to their population, but
+are eaten by foxes at a rate proportional to their own population and the population of foxes:
+\[
+\frac{dx}{dt} = \alpha x - \beta xy,
+\]
+where $\alpha$ and $\beta$ are constants. At the same time foxes reproduce at a rate proportional to the 
+rate at which they eat rabbits but also die of old age at a rate proportional to their own 
+population:
+\[
+ \frac{dy}{dt} = \gamma xy - \delta y,
+\]
+where $\gamma$ and $\delta$ are constants.
+\begin{enumerate}
+ \item Use the Runge-Kutta method for the case $\alpha=1$, $\beta=\gamma=.5$, and $\delta = 2$,
+starting with the initial condition $x=y=2$. Make a graph showing both $x$ and $y$ as a function
+of time on the same axes from $t=0$ to $t=30$. Be sure to label the graph.
+ \item Describe in words what is going on in the system, in terms of rabbits and foxes.
+\end{enumerate}
+
+\end{problem}
+
+
+\begin{problem}
+The Lorenz equations are:
+\begin{align*}
+ \frac{dx}{dt} &= \sigma(y-x), & \frac{dy}{dt}&= rx-y-xz, & \frac{dz}{dt}&=xy-bz
+\end{align*}
+where $\sigma$, $r$ and $b$ are constants. 
+
+These equations were first studied by Edward Lorenz in 1963, who derived them from a simplified 
+model of weather patterns. The reason for their fame is that they wer one of the first good examples
+of \emph{deterministic chaos}, the occurrence of apparently random motion even though there is
+no randomness. 
+
+Solve the Lorenz equations for the case $\sigma=10$, $r=28$, and $b=\frac{8}{3}$ in the 
+range $t=0$ to $t=50$ with initial conditions $(x,y,z) = (0,1,0)$. Use \emph{at minimum}
+10,000 steps. 
+
+\begin{enumerate}
+ \item Make a plot of $y$ vs $t$. Note the unpredictable nature of the motion.
+ \item Make three more plots $z$ vs $x$, $y$ vs $x$ and $z$ vs $y$. Ensure the figsize of each
+is large so you can see detail.
+\end{enumerate}
+
+Include all these in a PDF.
+
+
+\end{problem}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

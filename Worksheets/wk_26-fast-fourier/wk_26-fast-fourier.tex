@@ -1,0 +1,257 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, April 21}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 26\ \\[2ex] Fast Fourier Transforms}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{lc}
+   CP &  7.2, 7.3, 7.4 \\
+ NMEP &  -
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{Motivation}
+The discrete cosine transform is an awesome tool to find the frequencies of incoming signals.
+The major disadvantage is the number of computations required to execute the transform. This
+causes the computation to be extremely slow, and sometimes you gotta go fast\footnote{\url{https://www.youtube.com/watch?v=ZZNwTMBNULY}}.
+
+
+This leads to the Fast Fourier Transform, or FFT for short. The book gives an explanation for how 
+this works, I highly recommend reading through and understanding it. The FFT is, essentially, the
+core of modern compression algorithms. MP3 finds the frequencies of music and discards ``irrelevant''
+frequencies, the irrelevant part is sophisticated. JPEG does the same with images, break the image
+into rectangles, and apply FFT to each rectangle dropping the ``irrelevant'' data. MP4 is similar to
+JPEG expect on videos. 
+
+The FFT will be responsible for breaking modern cryptography once quantum computers become a thing.
+In a very simplified way, modern cryptography requires factoring large numbers. There exists an 
+algorithm, Shor's algorithm, that can do this in polynomial time using a quantum computer. The key
+part is a Fourier transform that is only fast on a quantum computer.
+
+
+\section{Numpy FFT}
+This is built into numpy. The funcitons are contained in \texttt{numpy.fft}. Here are the important
+ones,
+\begin{enumerate}
+ \item \texttt{rfft} The real Fourier transform
+ \item \texttt{irfft} The inverse real Fourier transform
+ \item \texttt{rfft2} The real Fourier transform on 2 dimensions
+ \item \texttt{irfft2} The inverse real Fourier transform on 2 dimensions
+\end{enumerate}
+There are further FFTs for $N$ dimensions.
+
+\section{Looking Ahead on these Transforms}
+We'll be moving on from here, but the big question is ``Why cosines?" The answer is it doesn't need
+to be. A current area of active research is Wavelets. These offer more accurate approximations using
+fewer ``frequencies''. I highly recommend going down the Wikipedia rabbit hole, it is fascinating
+and I *believe* JPEG uses stuff like this.
+
+
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 26 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+Include all graphs in your write up of the problems.
+
+\begin{problem}
+ Music! Let's play with music. For this problem you'll need a WAV file. I've provided one on 
+Canvas, it's ``I'll follow you into the dark'' by Death Cab for Cutie. Here are my imports and 
+how I load the file,
+\begin{verbatim}
+import matplotlib.pyplot as plt
+import numpy as np
+import wave
+from numpy.fft import rfft,irfft,fftfreq
+from scipy.io.wavfile import write
+
+spf = wave.open("dark.wav")
+
+signal = spf.readframes(-1)
+signal = np.frombuffer(signal, "Int16")
+fs = spf.getframerate()
+\end{verbatim}
+With this we can plot the waveform,
+\begin{verbatim}
+fig,ax = plt.subplots(nrows=2,figsize = (10,4))
+
+original_time = np.linspace(0, len(signal) / fs, num=len(signal))
+
+ax[0].plot(original_time, signal)
+\end{verbatim}
+
+To save the WAV file,
+\begin{verbatim}
+write("music/test.wav",int(fs*(len(song)/len(signal))),song)
+\end{verbatim}
+where \texttt{song} is the result of irfft. 
+
+Here is what you should do,
+\begin{enumerate}
+ \item Slice the sample data to only include a few seconds of the song. I used 30 to 32ish seconds. 
+(this is optional, but it gives better results)
+ \item Take the rfft. 
+ \item Do some stuff.
+ \item Plot the irfft on top of the original data, you may want an alpha value (.5 is good).
+ \item Plot the frequencies on the lower graph. You'll have to think about what the $x$-values
+should be. 
+ \item Resave the WAV file and listen to it. 
+\end{enumerate}
+
+
+The do some stuff is the fun part. Try experimenting with the following,
+\begin{enumerate}
+ \item Set all the frequencies with an amplitude smaller (take the absolute value) than some threshold
+equal to 0.
+ \item Set all the higher frequencies equal to zero. 
+ \item Get creative
+\end{enumerate}
+
+Document what stuff you do and how it affects the final audio of the song (you'll need to listen
+to the output).
+
+\end{problem}
+
+
+
+\begin{problem}
+ Images! This problem will focus on a greyscale image, but it *should* work for any type of image,
+you many need to use a higher dimension Fourier Transform. I put an image of pretty bird on Canvas.
+Here is how I load the image, convert it to greyscale and make it a numpy array.
+\begin{verbatim}
+from PIL import Image
+import numpy as np
+from numpy.fft import rfft2,irfft2
+
+# load the image
+image = Image.open('images/bird.png').convert('L')
+
+# convert image to numpy array
+data = np.asarray(image)
+
+fourier = rfft2(data)
+
+#Magic code :)
+
+im_data = np.asarray(irfft2(fourier),dtype="uint8")
+
+
+# create Pillow image
+image2 = Image.fromarray(im_data)
+print(type(image2))
+
+image2.save("images/new_bird.png")
+\end{verbatim}
+
+In the ``Magic Code'' spot you can do a bunch of stuff. Try dropping certain frequencies, dropping
+small contributors, or something interesting. 
+
+Document what you do and comment on the results. 
+
+\end{problem}
+
+\begin{problem}
+ JPEG is a similar process to the above, except the first step is break the image into a grid, 
+perform the above process (FFT and dropping frequencies) on each grid, and reconstructing each
+piece. Try breaking the bird image into a $3\times 3$ grid and do stuff to it. You should be 
+able to see the boundaries when you reconstruct. This problem may be challenging. Good luck.
+\end{problem}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

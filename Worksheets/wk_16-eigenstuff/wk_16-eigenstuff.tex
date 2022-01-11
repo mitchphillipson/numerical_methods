@@ -1,0 +1,164 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subcaption}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, March 10}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 16\ \\[2ex] Eigenvalues and Eigenvectors}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  6.2 \\
+ NMEP &  Chapter 9
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{Overview}
+
+Recall, for an $n\times n$ matrix $A$ we say $\lambda$ is an eigenvalue and $\vec{v}$ is an
+eigenvector if,
+\[
+A\vec{v} = \lambda \vec{v}.
+\]
+
+Think about what an algorithm to find eigenvalues of a matrix would need to do. It must find and solve the characteristic polynomial, or $\det(A-\lambda I)$. This is an $n$-degree polynomial in $\lambda$, which is hard to solve. One may think that Newton's method is the ideal solution to this problem, but you still need to find the characteristic polynomial which requires a determinant and a variable. It's a whole thing.  
+
+There are algorithms to compute eigenvalues and eigenvectors and they tend to be complicated. To work around this we'll be using numpy's linear algebra functions. \href{https://docs.scipy.org/doc/numpy/reference/routines.linalg.html}{Link to all Numpy linear algebra functions}. In particular you should familiarize yourself with \texttt{numpy.linalg.eig} and \texttt{numpy.linalg.eigvals}. If your matrix happens to be symmetric, you should use the functions that specialize in symmetry (these end in ``h'' for Hermitian). They will be far more efficient. 
+
+
+
+
+\section{Symmetric Matrices}
+
+In most applications in Physics and Engineering the matrix $A$ is symmetric (or Hermitian if it's complex). In other words $A=A^T$ (or $A=\bar{A}^T$ that bar is a complex conjugate this is Hermitian). What this means is that the methods in the book only work for symmetric matrices. However, not all matrices are symmetric. We'll explore both symmetric and non-symmetric matrices.  %Unfortunately, the only reliable information I could find about eigenvalues and eigenvectors dealt primarily with symmetric matrices. So we'll probably just use symmetric matrices.
+
+
+\begin{theorem}[Spectral Theorem]
+A real symmetric $n\times n$ matrix has real eigenvalues and $n$ orthonormal eigenvectors.
+\end{theorem}
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 16 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+\begin{problem}
+ Verify the Spectral Theorem by generating at least 10 random symmetric matrices, finding their eigenvalues and eigenvectors, checking that the eigenvalues are real and the eigenvectors are orthogonal (you don't need normal since that's just a scale). You should structure your programs in pieces, so like this
+ \begin{enumerate}
+  \item Make a function \texttt{random\_symmetric(n)} to generate a random $n\times n$ matrix. I recommend looking into the transpose operation and thinking about why that might be helpful.
+  \item Make a function \texttt{is\_orthogonal(L)} to test if the vectors in a list $L$ are orthogonal. You'll want to check the output of \texttt{numpy.linalg.eig} and make \texttt{L} match that type. 
+  \item Make a function \texttt{test\_spectral\_theorem(M)} that takes a matrix \texttt{M} and returns True if the matrix satisfies the spectral theorem and False if it does not. Here are a couple of suggestions off the top of my head that may help you,
+   \begin{itemize}
+    \item Use the python function \texttt{all} to test if all the eigenvalues are real. Numpy has a function to test if a number is real.
+    \item I thought I had more than one. Wait, don't do the following,
+    \begin{verbatim}
+      if a and b:
+      	return True
+     else:
+     	return False
+    \end{verbatim}
+    Just \texttt{return a and b}. It's shorter and more clear.
+   \end{itemize}
+   \item Finally, make a function \texttt{random\_symmetric\_spectral(N)} to test if $N$ symmetric matrices all satisfy the spectral theorem. Randomize the size of each matrix to between 10 and 50.
+ \end{enumerate}
+\end{problem}
+
+
+\begin{problem}
+ Using the framework you set up in the previous problem, try testing a few non-symmetric matrices. Can you come up with a non-symmetric matrix that has real eigenvalues and orthogonal eigenvectors?
+\end{problem}
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

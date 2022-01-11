@@ -1,0 +1,256 @@
+\documentclass[11pt,letterpaper]{article}
+%\documentclass[11pt,a4paper]{report}
+
+\usepackage{amssymb,amsmath,amsthm} 
+\usepackage[margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[compact]{titlesec}
+\usepackage{graphicx,ctable,booktabs,subfigure}
+
+\usepackage{xparse,hyperref,parskip}
+
+%\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\semester}{Spring 2022}
+\newcommand{\due}{Thursday, March 31}
+
+
+\pagestyle{fancy}
+\lhead{ }
+\chead{\footnotesize Math 3338\quad  Numerical Methods\quad  \semester}
+\rhead{\footnotesize \thepage}
+\setlength{\parindent}{0cm}
+\setlist{noitemsep}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+\newtheorem{theorem}{Theorem}
+
+\input{defs.tex}
+
+%Defines the problem environment with arguments Points and Solution gap
+\input{problem_env.tex}
+
+
+
+\begin{document}
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Worksheet 20\ \\[2ex] First Order Differential Equations}}\\
+\end{center}
+\vspace{2mm}
+
+
+\section{Reading}
+
+\begin{table}[!ht]
+ \centering
+ \begin{tabular}{ll}
+   CP &  8.1, 8.2 \\
+ NMEP &  Chapter 7
+ \end{tabular}
+\caption{Sections Covered}
+\end{table}
+
+\section{Overview}
+Suppose $y$ is a function of $x$. We want to solve equations of the form,
+\[
+\frac{dy}{dx} = f(x,y).
+\]
+
+\section{Euler's Method}
+This is the simplest numerical method. Here is the process,
+\begin{enumerate}
+ \item Start with a point $(x_0,y_0)$ and a step size $h$
+ \item $f(x_{0},y_{0})$ is the slope at the point $(x_{0},y_{0})$, make the tangent line of the
+function at this point $y=f(x_0,y_0)(x-x_0)+y_0$.
+ \item Set $x_1 = x_0+h$ and $y_1 = f(x_0,y_0)(x_1-x_0)+y_0$.
+ \item Continue until you hit the upper limit of $x$-values.
+\end{enumerate}
+
+This is an approximation technique. The smaller the step size, the better the approximation. It's
+error term is $\bigo(h^2)$ (this is derived in the book). However, this is a tricky bit here
+\emph{each step} is accurate to $\bigo(h)$ and we are potential computing a ton of steps. The error
+will compound, you'll see this in the homework. 
+
+
+\section{Runge-Kutta}
+We've already learned the first order Runge-Kutta method! It's the same as Euler's method. It's 
+called ``first order" because it is accurate to $\bigo(h)$ (in other words the error term is
+$\bigo(h^2)$).
+
+\subsection{Second order Runge-Kutta}
+
+This is accurate to $\bigo(h^2)$ with error terms $\bigo(h^3)$. The book has a full explanation
+for how this works. Very similar to Euler's method, this is an iterative technique except instead
+of approximating the slope at $x$, we approximate the slope at $x+\frac{1}{2}h$. 
+
+A single iteration is given by the calculations,
+\begin{align*}
+ k_1 &= hf(x,y) \\ 
+ k_2 &= hf(x+\frac{1}{2}h,y+\frac{1}{2}k_1)  \\
+ y_{new} &= y + k_2 
+\end{align*}
+where $f(x,y) = \frac{dy}{dx}$.
+
+
+\subsection{Fourth order Runge-Kutta}
+This is more complicated than the second order, but also far more complicated. It's accurate to 
+$\bigo(h^4)$, which is amazing.
+\begin{align*}
+        k_1 &= hf(x,y) \\ 
+        k_2 &= hf(x+.5h,y+.5k_1) \\
+        k_3 &= hf(x+.5h,y+.5k_2) \\
+        k_4 &= hf(x+h,y+k_3) \\
+        y_{new} &= y+1/6(k_1+2k_2+2k_3+k_4)
+\end{align*}
+
+
+\section{Vector Fields}
+A vector field is a field of vectors. It tells you which direction of the slope at each point in
+the plane. These are easy to make in Python,
+\begin{verbatim}
+    X,Y = np.meshgrid(np.linspace(xmin,xmax,Nx),np.linspace(ymin,ymax,Ny))
+    plt.quiver(X,Y,1,f(X,Y),color="lightgrey")
+\end{verbatim}
+
+
+
+
+\section{Mean Absolute Error}
+Suppose you have to vectors $x$ and $y$. You can determine how ``close'' they are using the mean
+absolute error,
+\[
+ \dfrac{ \sum_{i=1}^n \abs{x_i-y_i}}{n}
+\]
+This is a stats thing, feel free to Google it. It tends to be used quite often in Machine learning 
+to as a measure of how close predictions are to data.
+
+
+
+
+
+
+
+\newpage
+
+\begin{center}
+{\huge{\bf  Numerical Methods}} \\[1.5ex]
+{\bf Math 3338 -- \semester}\\[1.5ex]
+{\Large{\bf Homework 20 (Due: \due)}}\\
+\end{center}
+\vspace{2mm}
+
+
+\begin{problem}
+ Create three functions, \texttt{euler}, \texttt{runge\_kutta2}, and \texttt{runge\_kutta}. The
+inputs to each of these should be $(f,x,y_0)$ where $f$ represents $\frac{dy}{dx}$ so
+$f$ is a bivariate function, $x$ is an
+array containing $x$-values (this will include the step size, $h$) and $y_0$ is the initial
+$y$-value. They should return an array of $y$-values.
+\end{problem}
+
+
+
+
+\begin{problem}
+ Consider the differential equation,
+\[
+ \frac{dy}{dx} = xy
+\]
+This is separable differential equation, so we can actually solve this. The solution is 
+$y=A\cdot\exp\left(\frac{x^2}{2}\right)$. Plot the following on a single graph,
+
+\begin{enumerate}
+ \item Create a vector field of $\frac{dy}{dx}$ for $-2\le x,y\le 2$. Make the color of the vector field light grey.
+ \item Plot $f(x) = A\cdot\exp\left(\frac{x^2}{2}\right)$ for $-2\le x\le 2$. You'll need to solve
+for $A$. Label this curve ``exact''
+ \item Plot three more curves, one for euler, runge\_kutta2 and runga\_kutta. Make the $x$-vector
+start at $-2$, end at $2$ with 10 equally spaced points between (in other words, a linspace). Label 
+these appropriately.
+ \item Include a legend.
+\end{enumerate}
+
+Include this graph in a PDF along with a visual description of what you see occurring. Note, a visual
+description uses words. Calculate the mean absolute error of each as well and make a table.
+
+\end{problem}
+
+
+
+\begin{problem}
+ Use the same differential equation from the previous problem. Put the following on a single graph
+\begin{enumerate}
+ \item Create a vector field of $\frac{dy}{dx}$ for $-2\le x,y\le 2$. Make the color of the vector field light grey.
+ \item Plot $f(x) = A\cdot\exp\left(\frac{x^2}{2}\right)$ for $-2\le x\le 2$. You'll need to solve
+for $A$. Label this curve ``exact''
+ \item Plot an approximation using Euler's method with 1,000 steps.
+ \item Plot an approximation using Runge\_Kutta2 with 100 steps.
+ \item Plot an approximation using Runge\_Kutta method with 10 steps.
+ \item Include a legend.
+\end{enumerate}
+
+Include this graph in a PDF along with a visual description of what you see occurring. Note, a visual
+description uses words. Calculate the mean absolute error of each as well and make a table.
+
+
+\end{problem}
+
+
+\begin{problem}
+ Use the same differential equation from the previous problem. Put the following on a single graph
+\begin{enumerate}
+ \item Create a vector field of $\frac{dy}{dx}$ for $-2\le x,y\le 2$. Make the color of the vector field light grey.
+ \item Plot $f(x) = A\cdot\exp\left(\frac{x^2}{2}\right)$ for $-2\le x\le 2$. You'll need to solve
+for $A$. Label this curve ``exact''
+ \item Plot an approximation using Euler's method with 10,000 steps.
+ \item Plot an approximation using Euler's method with 100 steps.
+ \item Plot an approximation using Euler's method with 10 steps.
+ \item Include a legend.
+\end{enumerate}
+
+Include this graph in a PDF along with a visual description of what you see occurring. Note, a visual
+description uses words. Calculate the mean absolute error of each as well and make a table.
+
+
+\end{problem}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
