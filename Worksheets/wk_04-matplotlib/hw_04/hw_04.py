@@ -9,7 +9,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def mandelbrot(N):
-    pass
+    real_values = np.linspace(-2,2,N)
+    imaginary_values = np.linspace(-2,2,N).reshape((-1,1))
+    
+    C = real_values+1.0j*imaginary_values
+    
+    z = np.zeros(C.shape)
+    
+    for i in range(100):
+        
+        z = z**2 + C
+        z[np.abs(z)>2] = 2
+    
+    
+    return np.abs(z)
 
 def factorial(n):
     
@@ -45,3 +58,51 @@ def gcd(m,n):
     if n== 0:
         return m
     return gcd(n,m%n)
+
+
+if __name__ == "__main__":
+    
+    from PIL import Image
+    
+    #fig,ax = plt.subplots(figsize=(10,10))
+    
+    z = mandelbrot(10000)
+    
+    z[z<2] = 0
+    
+    image = Image.fromarray(z*128)
+    
+    image = image.convert("RGB")
+    
+    image.save("mandelbrot.png")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
