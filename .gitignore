@@ -39,6 +39,7 @@ MANIFEST
 *.cb
 *.cb2
 .*.lb
+*.gz
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
