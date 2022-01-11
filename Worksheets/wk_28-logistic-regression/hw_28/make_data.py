@@ -19,8 +19,10 @@ def data_01(N,M):
     pickle.dump([X,y], open('hw_28-data_01.pickle','wb'))
     
     X = np.random.rand(2,M)*10-5
-    
-    pickle.dump(X, open('hw_28-predict_01.pickle','wb'))
+    y = np.zeros(M)
+
+    y[X[0,:]<= 3*X[1,:]-2] = 1   
+    pickle.dump([X,y], open('hw_28-predict_01.pickle','wb'))
     
     
     
@@ -35,4 +37,8 @@ def data_02(N,M):
     
     X = np.random.rand(2,M)*10-5
     
-    pickle.dump(X, open('hw_28-predict_02.pickle','wb'))
+    y = np.zeros(M)
+
+    y[X[1,:]<=X[0,:]**2-4] = 1
+    
+    pickle.dump([X,y], open('hw_28-predict_02.pickle','wb'))
