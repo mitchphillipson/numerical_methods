@@ -319,7 +319,7 @@ it uses the numbers and strings. For example, your function definition should ha
 def fizzbuzz(n, fizzy = {3:"fizz",5:"buzz"})
 \end{verbatim}
 
-Here is some sample output of \texttt{fizzbuzz(10,\{2:`Dr. Mitch',3:`Rules'\}}
+Here is some sample output of \texttt{fizzbuzz(10,\{2:`Dr. Mitch',3:`Rules'\})}
 \begin{verbatim}
 Dr. MitchRules
 Dr. Mitch
@@ -338,8 +338,7 @@ Dr. Mitch
 \begin{problem}
  Write a function that will solve any quadratic polynomial, $ax^2+bx+c=0$. You should have 3 inputs, 
 $a$, $b$ and $c$ and the output should be a list of tuples $[(x_1,x_2),(y_1,y_2)]$ where $x_1<y_1$
-or $x_2<=y_2$ if $x_1=y_1$. This is representing a complex number. If there is only one (or zero) 
-solution the entries should be None (None is a special Python type).
+or $x_2<=y_2$ if $x_1=y_1$. 
 
 So for example, if the solutions are $3\pm 2i$, the output is $[(3,-2),(3,2)]$. If $3$ is the 
 only solution, the output is $[(3,0),(3,0)]$
